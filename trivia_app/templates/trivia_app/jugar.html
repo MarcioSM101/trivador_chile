@@ -1,12 +1,10 @@
-<!-- templates/trivia_app/jugar.html -->
-
 {% extends 'base.html' %}
 
 {% block content %}
 <div class="container mt-4">
     <h2>¡Juega!</h2>
     <h4>Categoría: {{ categoria.nombre }}</h4>
-    <form method="post" action="{% url 'jugar' %}">
+    <form method="post">
         {% csrf_token %}
         {% for pregunta in preguntas %}
         <div class="form-group">

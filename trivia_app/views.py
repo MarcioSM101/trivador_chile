@@ -5,6 +5,7 @@ from django.contrib.auth import login
 from .models import Pregunta, Juego, Like
 from .models import Pregunta, Categoria  
 from .forms import PreguntaForm
+from django.utils import timezone
 import random
 
 
@@ -55,28 +56,63 @@ def eliminar_pregunta(request, pregunta_id):
 
 @login_required
 def jugar(request):
-    if request.method == 'POST':
-        # Obtener la categoría seleccionada por el usuario
-        categoria_id = request.POST.get('categoria')
-        categoria = get_object_or_404(Categoria, id=categoria_id)
-        
-        # Obtener preguntas aleatorias de la categoría seleccionada
-        preguntas = list(Pregunta.objects.filter(categoria=categoria))
-        random.shuffle(preguntas)
-        preguntas = preguntas[:4]  # Seleccionar solo 4 preguntas
-        
-        return render(request, 'trivia_app/jugar.html', {'preguntas': preguntas, 'categoria': categoria})
-    
-    else:
-        # Mostrar formulario de selección de categoría
+    # Paso 1: Selección de categoría
+    if request.method == 'GET' and 'categoria' not in request.session:
         categorias = Categoria.objects.all()
         return render(request, 'trivia_app/seleccionar_categoria.html', {'categorias': categorias})
 
+    # Paso 2: Mostrar preguntas después de seleccionar una categoría
+    elif request.method == 'POST' and 'categoria' not in request.session:
+        categoria_id = request.POST.get('categoria')
+        if not categoria_id:
+            return redirect('home')  # Redirige si no hay categoría seleccionada
+
+        categoria = get_object_or_404(Categoria, id=categoria_id)
+
+        # Obtener preguntas aleatorias de la categoría seleccionada
+        preguntas = list(Pregunta.objects.filter(categoria=categoria))
+        random.shuffle(preguntas)
+        preguntas = preguntas[:4]
+
+        # Guardar la categoría seleccionada y las preguntas en la sesión
+        request.session['categoria'] = categoria.id
+        request.session['preguntas_ids'] = [pregunta.id for pregunta in preguntas]
+
+        # Mostrar las preguntas al usuario
+        return render(request, 'trivia_app/jugar.html', {'preguntas': preguntas, 'categoria': categoria})
+
+    # Paso 3: Guardar el juego después de responder preguntas
+    elif request.method == 'POST' and 'categoria' in request.session:
+        preguntas_ids = request.session.get('preguntas_ids', [])
+        if not preguntas_ids:
+            return redirect('home')
+
+        preguntas = Pregunta.objects.filter(id__in=preguntas_ids)
+        puntaje = 0
+        for pregunta in preguntas:
+            respuesta_usuario = request.POST.get(f'respuesta_{pregunta.id}')
+            if respuesta_usuario == pregunta.resp_correcta:
+                puntaje += 1
+
+        # Guardar el juego con el puntaje
+        Juego.objects.create(
+            usuario=request.user,
+            puntaje=puntaje,
+            fecha=timezone.now()
+        )
+
+        # Limpiar la sesión después de guardar el juego
+        del request.session['categoria']
+        del request.session['preguntas_ids']
+
+        return redirect('home')
+
+    # Si algo sale mal, redirigir al inicio
+    return redirect('home')
+
+
 @login_required
 def like_resultado(request, juego_id):
-    """
-    Vista para dar 'like' a un resultado de juego específico.
-    """
     juego = get_object_or_404(Juego, id=juego_id)
     Like.objects.get_or_create(usuario=request.user, juego=juego)
     return redirect('home')
@@ -84,17 +120,11 @@ def like_resultado(request, juego_id):
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def preguntas(request):
-    """
-    Vista que muestra todas las preguntas, accesible solo para superusuarios.
-    """
     preguntas = Pregunta.objects.all()
     return render(request, 'trivia_app/preguntas.html', {'preguntas': preguntas})
 
 
 def signup(request):
-    """
-    Vista de registro de usuarios.
-    """
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():

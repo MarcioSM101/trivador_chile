@@ -1,0 +1,39 @@
+<!-- templates/trivia_app/crear_pregunta.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Nueva Pregunta</h2>
+<form method="post" action="{% url 'crear_pregunta' %}">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="categoria">Selecciona una categoría:</label>
+        <select id="categoria" name="categoria" class="form-control">
+            {% for categoria in categorias %}
+            <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="texto">Escribe una pregunta:</label>
+        <input type="text" id="texto" name="texto" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="resp_correcta">Escribe la respuesta correcta:</label>
+        <input type="text" id="resp_correcta" name="resp_correcta" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="resp_incorrecta1">Escribe la primera respuesta incorrecta:</label>
+        <input type="text" id="resp_incorrecta1" name="resp_incorrecta1" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="resp_incorrecta2">Escribe la segunda respuesta incorrecta:</label>
+        <input type="text" id="resp_incorrecta2" name="resp_incorrecta2" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="resp_incorrecta3">Escribe la tercera respuesta incorrecta:</label>
+        <input type="text" id="resp_incorrecta3" name="resp_incorrecta3" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Crear</button>
+</form>
+{% endblock %}

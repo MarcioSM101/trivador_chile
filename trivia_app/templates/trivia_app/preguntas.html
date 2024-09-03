@@ -1,0 +1,33 @@
+<!-- templates/trivia_app/preguntas.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Preguntas</h2>
+
+<!-- Botón para crear una nueva pregunta -->
+<a href="{% url 'crear_pregunta' %}" class="btn btn-success mb-3">Crear Nueva Pregunta</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Pregunta</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pregunta in preguntas %}
+        <tr>
+            <td>{{ pregunta.texto }}</td>
+            <td>
+                <!-- Botón para eliminar una pregunta -->
+                <form action="{% url 'eliminar_pregunta' pregunta.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

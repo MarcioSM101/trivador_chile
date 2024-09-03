@@ -1,0 +1,50 @@
+<!-- templates/trivia_app/home.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <a href="{% url 'jugar' %}" class="btn btn-primary btn-lg btn-block">¡JUGAR!</a>
+    </div>
+    <div class="col-md-8">
+        <h3>Mejores Jugadas</h3>
+        <form method="get" class="form-inline mb-2">
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" name="fecha" class="form-control mx-2" value="{{ fecha_filtrada }}">
+            <button type="submit" class="btn btn-secondary">Filtrar</button>
+        </form>
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>Jugador</th>
+                    <th>Puntaje</th>
+                    <th>Fecha</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for juego in juegos %}
+                <tr>
+                    <td>{{ juego.usuario.username }}</td>
+                    <td>{{ juego.puntaje }}/4</td>
+                    <td>{{ juego.fecha }}</td>
+                    <td>
+                        {% if juego.id not in juegos_liked_by_user %}
+                            <form action="{% url 'like_resultado' juego.id %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link p-0">
+                                    <img src="{% static 'like_empty.png' %}" alt="Like" width="20" height="20">
+                                </button>
+                            </form>
+                        {% else %}
+                            <img src="{% static 'like_filled.png' %}" alt="Liked" width="20" height="20">
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

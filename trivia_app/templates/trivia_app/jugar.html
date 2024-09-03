@@ -1,0 +1,27 @@
+<!-- templates/trivia_app/jugar.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>¡Juega!</h2>
+    <h4>Categoría: {{ categoria.nombre }}</h4>
+    <form method="post" action="{% url 'jugar' %}">
+        {% csrf_token %}
+        {% for pregunta in preguntas %}
+        <div class="form-group">
+            <label>{{ pregunta.texto }}</label>
+            <div>
+                {% for respuesta in pregunta.get_respuestas_aleatorias %}
+                <div class="form-check">
+                    <input type="radio" name="respuesta_{{ pregunta.id }}" value="{{ respuesta }}" class="form-check-input" id="respuesta_{{ pregunta.id }}_{{ forloop.counter }}">
+                    <label class="form-check-label" for="respuesta_{{ pregunta.id }}_{{ forloop.counter }}">{{ respuesta }}</label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Enviar Respuestas</button>
+    </form>
+</div>
+{% endblock %}

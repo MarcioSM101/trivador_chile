@@ -1,12 +1,24 @@
-<!-- templates/trivia_app/preguntas.html -->
-
 {% extends 'base.html' %}
 
 {% block content %}
 <h2>Preguntas</h2>
 
-<!-- Botón para crear una nueva pregunta -->
-<a href="{% url 'crear_pregunta' %}" class="btn btn-success mb-3">Crear Nueva Pregunta</a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- Botón para crear una nueva pregunta -->
+    <a href="{% url 'crear_pregunta' %}" class="btn btn-success">Crear Nueva Pregunta</a>
+
+    <!-- Formulario para filtrar preguntas por categoría -->
+    <form method="get" action="{% url 'preguntas' %}" class="form-inline">
+        <label for="categoria" class="mr-2">Filtrar por Categoría:</label>
+        <select id="categoria" name="categoria" class="form-control mr-2">
+            <option value="">Todas</option>
+            {% for categoria in categorias %}
+            <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+    </form>
+</div>
 
 <table class="table table-striped">
     <thead>

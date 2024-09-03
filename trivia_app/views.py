@@ -7,6 +7,8 @@ from .models import Pregunta, Categoria
 from .forms import PreguntaForm
 from django.utils import timezone
 import random
+from django.contrib import messages
+from .forms import CustomUserCreationForm
 
 
 def home(request):
@@ -120,17 +122,26 @@ def like_resultado(request, juego_id):
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def preguntas(request):
-    preguntas = Pregunta.objects.all()
-    return render(request, 'trivia_app/preguntas.html', {'preguntas': preguntas})
+    """
+    Vista que muestra todas las preguntas, accesible solo para superusuarios.
+    """
+    categoria_id = request.GET.get('categoria')
+    if categoria_id:
+        preguntas = Pregunta.objects.filter(categoria_id=categoria_id)
+    else:
+        preguntas = Pregunta.objects.all()
+    
+    categorias = Categoria.objects.all()
+    return render(request, 'trivia_app/preguntas.html', {'preguntas': preguntas, 'categorias': categorias})
 
 
-def signup(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+def register(request):
+    if request.method == "POST":
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home')  # Redirige a la página de inicio después de registrarse
+            return redirect('home')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})

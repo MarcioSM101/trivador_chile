@@ -7,10 +7,22 @@ body {
     padding: 0;
 }
 
+/* Especificar mejor el hover para botones dentro de la navbar */
+.navbar .btn:hover {
+    background-color: yellow !important;
+    color: black !important;
+}
+
 /* Estilos para el icono del corazón */
 .like-icon {
     color: #ffffff; /* Color inicial del icono */
     transition: transform 0.3s, color 0.3s; /* Transiciones para el zoom y el cambio de color */
+}
+
+/* Asegúrate de que el efecto hover amarillo no se aplique al icono del corazón */
+.like-icon:hover {
+    background-color: transparent !important; /* Sin fondo al hacer hover */
+    color: #ffffff !important; /* Mantener el color blanco al hacer hover */
 }
 
 .zoom {
@@ -44,8 +56,6 @@ body {
     color: #ffffff; /* Asegura que el texto en el cuerpo de la tabla sea blanco */
 }
 
-
-
 /* Estilos personalizados para el botón */
 .custom-btn {
     background-color: #ffffff !important; /* Fondo blanco */
@@ -55,12 +65,9 @@ body {
 }
 
 .custom-btn:hover {
-    background-color: #fbfe22 !important; /* Fondo rojo al hacer hover */
+    background-color: #fbfe22 !important; /* Fondo amarillo al hacer hover */
     color: #000000 !important; /* Texto negro */
 }
-
-
-/* styles.css */
 
 /* Estilos personalizados para las imágenes */
 .custom-image {
@@ -72,4 +79,11 @@ body {
     top: 30px; /* Ajusta la posición vertical según sea necesario */
     left: -100px; /* Mueve la imagen más a la izquierda */
     z-index: 1; /* Asegura que la imagen esté detrás del botón */
+}
+
+/* Ocultar imágenes en pantallas pequeñas */
+@media (max-width: 768px) {
+    .custom-image {
+        display: none; /* Oculta la imagen */
+    }
 }

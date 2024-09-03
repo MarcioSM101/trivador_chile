@@ -21,5 +21,15 @@
         {% endfor %}
         <button type="submit" class="btn btn-primary">Enviar Respuestas</button>
     </form>
+<!-- Modal de Bootstrap para respuestas incorrectas -->
+<div class="modal fade" id="incorrectModal" tabindex="-1" role="dialog" aria-labelledby="incorrectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="{% static 'img/imagen_incorrecta.png' %}" alt="Respuesta Incorrecta" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 {% endblock %}

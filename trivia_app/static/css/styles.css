@@ -87,3 +87,19 @@ body {
         display: none; /* Oculta la imagen */
     }
 }
+
+/* Estilo del botón "Todos los Jugadores" con bordes y texto blancos */
+.btn-custom-outline {
+    color: white !important; /* Texto blanco */
+    border: 2px solid white !important; /* Borde blanco más visible */
+    background-color: transparent !important; /* Fondo transparente */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave */
+    font-weight: bold; /* Texto en negrita para mayor visibilidad */
+}
+
+/* Estilo del botón cuando se pasa el mouse o está activo */
+.btn-custom-outline:hover, .btn-custom-outline:active, .btn-custom-outline:focus {
+    background-color: yellow !important; /* Fondo amarillo */
+    color: black !important; /* Texto negro */
+    border-color: yellow !important; /* Borde amarillo */
+}

@@ -2,13 +2,15 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from .models import Pregunta, Juego, Like
+from .models import Pregunta, Juego, Like, User
 from .models import Pregunta, Categoria  
 from .forms import PreguntaForm
 from django.utils import timezone
 import random
 from django.contrib import messages
 from .forms import CustomUserCreationForm
+from django.db.models import Sum
+
 
 
 def home(request):
@@ -145,3 +147,40 @@ def register(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+@login_required
+def todos_los_jugadores(request):
+    # Obtener todos los usuarios
+    jugadores = User.objects.all()
+    
+    # Calcular la suma total de puntos por jugador
+    jugadores_con_puntaje = []
+    for jugador in jugadores:
+        puntaje_total = Juego.objects.filter(usuario=jugador).aggregate(total_puntaje=Sum('puntaje'))['total_puntaje'] or 0
+        jugadores_con_puntaje.append({
+            'jugador': jugador,
+            'puntaje_total': puntaje_total
+        })
+
+    context = {
+        'jugadores_con_puntaje': jugadores_con_puntaje,
+    }
+
+    return render(request, 'trivia_app/todos_los_jugadores.html', context)
+
+def mejores_jugadores(request):
+    fecha_filtrada = request.GET.get('fecha')
+    juegos = Juego.objects.all()
+
+    if fecha_filtrada:
+        juegos = juegos.filter(fecha=fecha_filtrada)
+
+    # Ordenar por puntaje y luego por fecha de forma descendente
+    juegos = juegos.order_by('-puntaje', '-fecha')
+
+    context = {
+        'juegos': juegos,
+        'fecha_filtrada': fecha_filtrada,
+    }
+
+    return render(request, 'trivia_app/mejores_jugadores.html', context)

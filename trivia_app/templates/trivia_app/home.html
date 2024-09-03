@@ -18,11 +18,20 @@
     <!-- Columna para mostrar mejores jugadas -->
     <div class="col-md-8">
         <h3>Mejores Jugadas</h3>
+        <!-- Formulario para filtrar por fecha -->
         <form method="get" class="form-inline mb-2">
             <label for="fecha">Fecha:</label>
             <input type="date" id="fecha" name="fecha" class="form-control mx-2" value="{{ fecha_filtrada }}">
             <button type="submit" class="btn btn-secondary">Filtrar</button>
         </form>
+        
+        <!-- Botón para ver todos los jugadores solo si el usuario está autenticado -->
+        {% if user.is_authenticated %}
+        <div class="form-inline mb-2">
+            <a href="{% url 'todos_los_jugadores' %}" class="btn btn-custom-outline">Todos los Jugadores</a>
+        </div>
+        {% endif %}
+
         <table class="table table-bordered">
             <thead class="thead-light">
                 <tr>
@@ -37,7 +46,7 @@
                 <tr>
                     <td>{{ juego.usuario.username }}</td>
                     <td>{{ juego.puntaje }}/4</td>
-                    <td>{{ juego.fecha }}</td>
+                    <td>{{ juego.fecha|date:"d M Y" }}</td>
                     <td>
                         {% if juego.id not in juegos_liked_by_user %}
                             <form action="{% url 'like_resultado' juego.id %}" method="post" class="d-inline">

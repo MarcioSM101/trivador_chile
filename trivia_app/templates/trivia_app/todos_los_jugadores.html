@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Todos los Jugadores</h2>
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>Jugador</th>
+                <th>Puntaje Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for jugador_data in jugadores_con_puntaje %}
+            <tr>
+                <td>{{ jugador_data.jugador.username }}</td>
+                <td>{{ jugador_data.puntaje_total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

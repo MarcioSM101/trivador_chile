@@ -2,9 +2,20 @@
 {% load static %}
 {% block content %}
 <div class="row">
-    <div class="col-md-4">
-        <a href="{% url 'jugar' %}" class="btn btn-primary btn-lg btn-block">¡JUGAR!</a>
+    <!-- Columna para imágenes de usuario -->
+    <div class="col-md-4 position-relative">
+        <!-- Botón de JUGAR con clase personalizada -->
+        <a href="{% url 'jugar' %}" class="btn btn-lg btn-block custom-btn mt-3" style="position: relative; z-index: 2;">¡JUGAR!</a>
+        
+        <!-- Imagen posicionada de forma absoluta debajo del botón -->
+        {% if not user.is_authenticated %}
+            <img src="{% static 'img/bufon.1.png' %}" alt="Imagen predeterminada" class="img-fluid custom-image">
+        {% else %}
+            <img src="{% static 'img/bufon.2.png' %}" alt="Imagen de usuario" class="img-fluid custom-image">
+        {% endif %}
     </div>
+
+    <!-- Columna para mostrar mejores jugadas -->
     <div class="col-md-8">
         <h3>Mejores Jugadas</h3>
         <form method="get" class="form-inline mb-2">
@@ -31,12 +42,12 @@
                         {% if juego.id not in juegos_liked_by_user %}
                             <form action="{% url 'like_resultado' juego.id %}" method="post" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-link p-0">
-                                    <img src="{% static 'like_empty.png' %}" alt="Like" width="20" height="20">
+                                <button type="submit" class="btn btn-link p-0 like-btn">
+                                    <i class="far fa-heart like-icon" style="font-size: 20px;"></i>
                                 </button>
                             </form>
                         {% else %}
-                            <img src="{% static 'like_filled.png' %}" alt="Liked" width="20" height="20">
+                            <i class="fas fa-heart liked-icon" style="font-size: 20px;"></i>
                         {% endif %}
                     </td>
                 </tr>

@@ -1,0 +1,75 @@
+/* styles.css */
+
+body {
+    background-color: #000000; /* Color de fondo negro */
+    color: #ffffff; /* Color de texto blanco para mejor legibilidad */
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilos para el icono del corazón */
+.like-icon {
+    color: #ffffff; /* Color inicial del icono */
+    transition: transform 0.3s, color 0.3s; /* Transiciones para el zoom y el cambio de color */
+}
+
+.zoom {
+    animation: zoomIn 0.3s forwards;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.5);
+    }
+}
+
+/* Cambiar color a rojo después del clic */
+.liked-icon {
+    color: #ff0000; /* Color rojo para el corazón después de hacer clic */
+}
+
+/* Estilos para las tablas */
+.table {
+    color: #ffffff; /* Color de texto blanco para las celdas de la tabla */
+}
+
+.table thead th {
+    color: #000000; /* Color de texto negro para el encabezado de la tabla */
+}
+
+.table tbody td {
+    color: #ffffff; /* Asegura que el texto en el cuerpo de la tabla sea blanco */
+}
+
+
+
+/* Estilos personalizados para el botón */
+.custom-btn {
+    background-color: #ffffff !important; /* Fondo blanco */
+    color: #000000 !important; /* Texto negro */
+    border: 1px solid #000000 !important; /* Borde negro */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave */
+}
+
+.custom-btn:hover {
+    background-color: #fbfe22 !important; /* Fondo rojo al hacer hover */
+    color: #000000 !important; /* Texto negro */
+}
+
+
+/* styles.css */
+
+/* Estilos personalizados para las imágenes */
+.custom-image {
+    max-width: 100%; /* Mantén el tamaño responsivo */
+    height: auto; /* Mantén la proporción de la imagen */
+    transform: scale(1.5); /* Aumenta el tamaño de la imagen al 150% */
+    transform-origin: top left; /* Establece el punto de origen para la escala en la esquina superior izquierda */
+    position: absolute; /* Posiciona la imagen de forma absoluta */
+    top: 30px; /* Ajusta la posición vertical según sea necesario */
+    left: -100px; /* Mueve la imagen más a la izquierda */
+    z-index: 1; /* Asegura que la imagen esté detrás del botón */
+}
